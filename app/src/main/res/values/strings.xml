@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Checkers</string>
+    <string name="action_settings">Settings</string>
+    <string name="startGame">Начать игру</string>
+    <string name="startGamePlayer">Два игрока</string>
+    <string name="options">Настройки</string>
+    <string name="exitBtn">Выйти из игры</string>
+</resources>
