@@ -18,8 +18,7 @@ public class checkerP {
     public final char square;
     public int suggested_col;
     public int suggested_row;
-
-    //
+    
     public checkerP(int x, int r, int c) {
        // Log.i("-------", "checkerP Start");
         this.move = false;
