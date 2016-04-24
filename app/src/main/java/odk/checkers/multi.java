@@ -85,9 +85,7 @@ public class multi extends Activity {
         };
 
         this.myBoard = new board(this, this.myGame, x, y, false, false, sender, h);
-        if (null != null) {
             aiThread com_bac_checkers_aiThread = new aiThread(h, this.myGame, this.myBoard);
-        }
         RelativeLayout mlayout = new RelativeLayout(this);
         mlayout.addView(this.myBoard);
         setContentView(mlayout);

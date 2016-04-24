@@ -19,6 +19,7 @@ public class checkerP {
     public int suggested_col;
     public int suggested_row;
 
+    //
     public checkerP(int x, int r, int c) {
        // Log.i("-------", "checkerP Start");
         this.move = false;
@@ -50,6 +51,7 @@ public class checkerP {
        // Log.i("-------", "checkerP End");
     }
 
+    //
     public checkerP(char c) {
         this.move = false;
         this.selected = false;
@@ -71,10 +73,12 @@ public class checkerP {
         }
     }
 
+    //является шашка дамкой или нет
     public boolean isKing() {
         return this.king;
     }
 
+    //вызывается когда шашка становится дамкой
     public void crown() {
         this.king = true;
         if (this.player != 1 && this.player != 2) {

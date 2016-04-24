@@ -4,18 +4,18 @@ package odk.checkers;
  * Created by 1 on 18.04.2016.
  */
 
-        import android.util.Log;
-        import java.lang.reflect.Array;
-        import java.util.Random;
+import android.util.Log;
+import java.lang.reflect.Array;
+import java.util.Random;
 
 public class checker {
     public checkerP[][] board = ((checkerP[][]) Array.newInstance(checkerP.class, new int[]{12, 12}));
     private int[][] choices = ((int[][]) Array.newInstance(Integer.TYPE, new int[]{4, 2}));
     private final int colSize = 12;
-    private int count1 = 15;
-    private int count2 = 15;
+    private int count1 = 15; //начальное количетсво шашек 1 игрока
+    private int count2 = 15; //начальное количетсво шашек 1 игрока
     private int numOfChoices = 0;
-    private int playerNumber;
+    private int playerNumber; //номер игрока
     private final int rowSize = 12;
     public int sCol;
     public int sRow;
@@ -29,8 +29,10 @@ public class checker {
         Log.i("-------","checker End");
     }
 
+    //создает клетки без шашек
     public void clear() {
      //   Log.i("-------","checkerClear Start");
+       //создает 0 и 11 строку и столбец
         int i = 0;
         while (i < this.board.length) {
             int j = 0;
@@ -42,6 +44,7 @@ public class checker {
             }
             i++;
         }
+        // просто создает клетки и задает их цвет
         for (i = 1; i < this.board.length - 1; i++) {
             int j = 1;
             while (j < this.board[i].length - 1) {
