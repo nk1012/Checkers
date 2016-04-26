@@ -13,7 +13,6 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        Log.i("-------", "MainActivity Start");
 
         ((Button) findViewById(R.id.StartGame)).setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
@@ -26,7 +25,6 @@ public class MainActivity extends Activity {
                 MainActivity.this.startActivity(new Intent(MainActivity.this, multi.class));
             }
         });
-
         Button exitBtn = (Button) findViewById(R.id.Exit);
         exitBtn.setOnClickListener(new OnClickListener() {
             @Override

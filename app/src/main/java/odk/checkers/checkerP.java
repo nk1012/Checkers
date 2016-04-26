@@ -20,7 +20,6 @@ public class checkerP {
     public int suggested_row;
     
     public checkerP(int x, int r, int c) {
-       // Log.i("-------", "checkerP Start");
         this.move = false;
         this.selected = false;
         this.row_location = r;
@@ -47,7 +46,6 @@ public class checkerP {
             Log.i("-------","ERROR: invalid build.");
             System.exit(2);
         }
-       // Log.i("-------", "checkerP End");
     }
 
     //

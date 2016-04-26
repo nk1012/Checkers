@@ -32,7 +32,7 @@ public class multi extends Activity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i("-------", "multi");
+        Log.i("-------", "multiStart");
         getWindow().setFlags(1024, 1024);
         requestWindowFeature(1);
         DisplayMetrics metrics = new DisplayMetrics();
@@ -61,7 +61,7 @@ public class multi extends Activity {
         message sender = new message("single player");
         Handler h = new Handler() {
             public void handleMessage(Message msg) {
-                Log.i("RAWR", "RAWR");
+                Log.i("------------", "handleMessage Start");
                 String text = msg.getData().getString("1");
                 String whatToDo = msg.getData().getString("CHECK");
                 if (whatToDo.equals("GAME_OVER")) {
@@ -73,19 +73,20 @@ public class multi extends Activity {
                     }).show();
                 } else if (whatToDo.equals("REFREASH")) {
                     multi.this.myBoard.invalidate();
-                } else if (whatToDo.equals("SERVER_BUSY") && whatToDo.equals("GAME_OVER")) {
+                } /*else if (whatToDo.equals("SERVER_BUSY") && whatToDo.equals("GAME_OVER")) {
                     new Builder(multi.this).setMessage("Server is currently busy").setPositiveButton("Ok", new OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
                             multi.this.finish();
                         }
                     }).show();
-                }
+                }*/
+                Log.i("------------", "handleMessage End");
             }
         };
 
         this.myBoard = new board(this, this.myGame, x, y, false, false, sender, h);
-            aiThread com_bac_checkers_aiThread = new aiThread(h, this.myGame, this.myBoard);
+        //aiThread com_bac_checkers_aiThread = new aiThread(h, this.myGame, this.myBoard);
         RelativeLayout mlayout = new RelativeLayout(this);
         mlayout.addView(this.myBoard);
         setContentView(mlayout);
@@ -93,6 +94,7 @@ public class multi extends Activity {
     }
 
     public View IntitializeView(int layoutId) {
+        Log.i("---------","Multi InitialView");
         View view = LayoutInflater.from(this).inflate(layoutId, null);
         view.setFocusable(true);
         view.setFocusableInTouchMode(true);

@@ -58,7 +58,6 @@ public class single extends Activity {
         this.sy2 = this.sy1 + (this.yOff * 10);
         message sender = new message("single player");
         Handler h = new Handler() {
-        /*
             public void handleMessage(Message msg) {
                 String text = msg.getData().getString("1");
                 String whatToDo = msg.getData().getString("CHECK");
@@ -81,7 +80,7 @@ public class single extends Activity {
                         }).show();
                     }
                 }
-            }*/
+            }
         };
 
 

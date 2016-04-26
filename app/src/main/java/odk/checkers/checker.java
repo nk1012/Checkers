@@ -10,15 +10,19 @@ import java.util.Random;
 
 public class checker {
     public checkerP[][] board = ((checkerP[][]) Array.newInstance(checkerP.class, new int[]{12, 12}));
+
+    // возможные ходы (4 - т.к. максимум ходов может быть 4) (2 - т.к это позиция клетки в которую делается ход)
     private int[][] choices = ((int[][]) Array.newInstance(Integer.TYPE, new int[]{4, 2}));
+    //количетво возможных ходов
+    private int numOfChoices = 0;
     private final int colSize = 12;
     private int count1 = 15; //начальное количетсво шашек 1 игрока
-    private int count2 = 15; //начальное количетсво шашек 1 игрока
-    private int numOfChoices = 0;
+    private int count2 = 15; //начальное количетсво шашек 2 игрока
+
     private int playerNumber; //номер игрока
     private final int rowSize = 12;
-    public int sCol;
-    public int sRow;
+    public int sCol;//устанавливается когда игрок нажимает на шашку (т.е. столбец выбранной шашки)
+    public int sRow;//устанавливается когда игрок нажимает на шашку (т.е. строка выбранной шашки)
 
     public checker(int num) {
         Log.i("-------","checker Start");
@@ -31,7 +35,6 @@ public class checker {
 
     //создает клетки без шашек
     public void clear() {
-     //   Log.i("-------","checkerClear Start");
        //создает 0 и 11 строку и столбец
         int i = 0;
         while (i < this.board.length) {
@@ -58,9 +61,9 @@ public class checker {
                 j++;
             }
         }
-       // Log.i("-------","checkerClear End");
     }
 
+    // вызывается при нажатии на шашку
     public void resetHighlighted() {
         Log.i("-------","checkerResetHighlighted Start");
         for (int i = 0; i < this.board.length; i++) {
@@ -70,11 +73,10 @@ public class checker {
                 com_bac_checkers_checkerP.selected = false;
             }
         }
-        Log.i("-------","checkerResetHighlighted End");
     }
 
 
-    // устанавливаются шашки
+    // первоначально устанавливаются шашки
     public void setup() {
         int i;
 
@@ -101,7 +103,7 @@ public class checker {
             }
         }
     }
-
+//проверяет найден хоть один ход или нет
     public boolean findMoves(int turn) {
         Log.i("-------","checker FindMoves Start");
         boolean rval = false;
@@ -122,8 +124,11 @@ public class checker {
     }
 
     // находит возможные ходы шашек
+    //playerNum - номер игорока который ходит;  r - строка;  c - столбец выбраной клетки
     public boolean genChoices(int playerNum, int r, int c) {
         boolean flag = false;
+
+        //обнуляем все шаги
         for (int i = 0; i < this.choices.length; i++) {
             for (int j = 0; j < this.choices[i].length; j++) {
                 this.choices[i][j] = 0;
@@ -134,16 +139,19 @@ public class checker {
             return false;
         }
 
-
-
+        // находит ходы для шашек которые находятся снизу на доске (черных) или белой, если шашка является дамкой
         if (playerNum == this.playerNumber || this.board[r][c].isKing()) {
+
+            //проверяет свободна ли ближайшая клетка справа по диагонали
             if (this.board[r - 1][c + 1].player == 0) {
+                // если да - увеличиваем кол-во возможных ходов. Записываем этот ход
                 flag = true;
                 this.board[r - 1][c + 1].move = true;
                 this.choices[this.numOfChoices][0] = r - 1;
                 this.choices[this.numOfChoices][1] = c + 1;
                 this.numOfChoices++;
             }
+            // проверяет есть ли в ближайшей справа клетке по диагонали шашка противника и что следующая клетка свободна (т.е. можно срубить шашку противника)
             if (this.board[r - 1][c + 1].player != playerNum && this.board[r - 1][c + 1].player > 0 && this.board[r - 2][c + 2].player == 0) {
                 flag = true;
                 this.board[r - 2][c + 2].move = true;
@@ -151,6 +159,8 @@ public class checker {
                 this.choices[this.numOfChoices][1] = c + 2;
                 this.numOfChoices++;
             }
+
+            //проверяет свободна ли ближайшая клетка слева по диагонали
             if (this.board[r - 1][c - 1].player == 0) {
                 flag = true;
                 this.board[r - 1][c - 1].move = true;
@@ -158,6 +168,8 @@ public class checker {
                 this.choices[this.numOfChoices][1] = c - 1;
                 this.numOfChoices++;
             }
+
+            // проверяет есть ли в ближайшей слева клетке по диагонали шашка противника и что следующая клетка свободна (т.е. можно срубить шашку противника)
             if (this.board[r - 1][c - 1].player != playerNum && this.board[r - 1][c - 1].player > 0 && this.board[r - 2][c - 2].player == 0) {
                 flag = true;
                 this.board[r - 2][c - 2].move = true;
@@ -167,10 +179,12 @@ public class checker {
             }
         }
 
-
+        // если данная шашка не дамка и номер игрока 1(т.е. который играет черными то выходим из этой функции)
         if (playerNum != (this.playerNumber % 2) + 1 && !this.board[r][c].isKing()) {
             return flag;
         }
+        //проверяет ходы для второго игрока (верхней части доски) - белые
+        //свободна ли справа вниз на 1 клетку подиагонали клетка
         if (this.board[r + 1][c + 1].player == 0) {
             flag = true;
             this.board[r + 1][c + 1].move = true;
@@ -179,6 +193,7 @@ public class checker {
             this.numOfChoices++;
         }
 
+        //проверяет есть ли в ближайшей слева клетке по диагонали шашка противника и что следующая клетка свободна (т.е. можно срубить шашку противника)
         if (this.board[r + 1][c + 1].player != playerNum && this.board[r + 1][c + 1].player > 0 && this.board[r + 2][c + 2].player == 0) {
             flag = true;
             this.board[r + 2][c + 2].move = true;
@@ -186,6 +201,8 @@ public class checker {
             this.choices[this.numOfChoices][1] = c + 2;
             this.numOfChoices++;
         }
+
+        //свободна ли слева вниз на 1 клетку подиагонали клетка
         if (this.board[r + 1][c - 1].player == 0) {
             flag = true;
             this.board[r + 1][c - 1].move = true;
@@ -193,9 +210,13 @@ public class checker {
             this.choices[this.numOfChoices][1] = c - 1;
             this.numOfChoices++;
         }
+
+        //
         if (this.board[r + 1][c - 1].player == playerNum || this.board[r + 1][c - 1].player <= 0 || this.board[r + 2][c - 2].player != 0) {
             return flag;
         }
+
+        //
         this.board[r + 2][c - 2].move = true;
         this.choices[this.numOfChoices][0] = r + 2;
         this.choices[this.numOfChoices][1] = c - 2;
@@ -204,10 +225,10 @@ public class checker {
     }
 
     public boolean movePiece(int playerNum, int row, int col) {
-        boolean again = false;
+        boolean again = false;//меняем клетку в которой шашка и пустую клетку, которые нажал игрок
         checkerP tmp = this.board[row][col];
         this.board[row][col] = this.board[this.sRow][this.sCol];
-        this.board[this.sRow][this.sCol] = tmp;
+        this.board[this.sRow][this.sCol] = tmp;//если бъем шашку
         if (row - this.sRow == 2 || this.sRow - row == 2) {
             int r;
             int c;
@@ -236,7 +257,7 @@ public class checker {
             }
         } else {
             resetHighlighted();
-        }
+        }//делаем дамками шашки при достижении последних строк доски
         if (row == 1 && this.board[row][col].player == this.playerNumber) {
             this.board[row][col].crown();
         } else if (row == 10 && this.board[row][col].player == (this.playerNumber % 2) + 1) {
@@ -388,7 +409,30 @@ public class checker {
                 return -1337;
             }
         }
-        if ((this.board[fromRow + 1][fromCol + 1].player == enemy && this.board[fromRow - 1][fromCol - 1].player == 0) || ((this.board[fromRow + 1][fromCol - 1].player == enemy && this.board[fromRow - 1][fromCol + 1].player == 0) || ((this.board[fromRow - 1][fromCol + 1].player == enemy && this.board[fromRow - 1][fromCol + 1].isKing() && this.board[fromRow + 1][fromCol - 1].player == 0) || (this.board[fromRow - 1][fromCol - 1].player == enemy && this.board[fromRow - 1][fromCol - 1].isKing() && this.board[fromRow + 1][fromCol + 1].player == 0)))) {
+        if ((this.board[fromRow + 1][fromCol + 1].player == enemy &&
+                this.board[fromRow - 1][fromCol - 1].player == 0) ||
+                (
+                        (this.board[fromRow + 1][fromCol - 1].player == enemy
+                                &&
+                        this.board[fromRow - 1][fromCol + 1].player == 0)
+                        ||
+                        (
+                           (this.board[fromRow - 1][fromCol + 1].player == enemy
+                                   &&
+                           this.board[fromRow - 1][fromCol + 1].isKing()
+                                   &&
+                           this.board[fromRow + 1][fromCol - 1].player == 0)
+
+                            ||
+                                   (this.board[fromRow - 1][fromCol - 1].player == enemy
+                                   &&
+                                        this.board[fromRow - 1][fromCol - 1].isKing()
+                                   &&
+                                   this.board[fromRow + 1][fromCol + 1].player == 0)
+                        )
+                )
+          )
+        {
             score = 1 + 1;
         }
         if ((this.board[fromRow + 1][fromCol + 1].player == ally && this.board[fromRow + 2][fromCol + 2].player == enemy) || ((this.board[fromRow + 1][fromCol - 1].player == ally && this.board[fromRow + 2][fromCol - 2].player == enemy) || ((this.board[fromRow - 1][fromCol + 1].player == ally && this.board[fromRow - 2][fromCol + 2].player == enemy && this.board[fromRow - 2][fromCol + 2].isKing()) || (this.board[fromRow - 1][fromCol - 1].player == ally && this.board[fromRow - 2][fromCol - 2].player == enemy && this.board[fromRow - 2][fromCol - 2].isKing())))) {

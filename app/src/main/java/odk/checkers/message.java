@@ -34,6 +34,7 @@ public class message {
     private InetAddress serverAddress;
 
     public message(Handler h) {
+/*
         Log.i("-------","message");
         this.sendData = new byte[1024];
         this.receiveData = new byte[1024];
@@ -69,14 +70,19 @@ public class message {
         } catch (Exception e) {
             System.exit(JOIN_ACK);
         }
+*/
     }
 
     public message(String s) {
+
+/*
         this.sendData = new byte[1024];
         this.receiveData = new byte[1024];
+*/
     }
 
     public void quit() {
+/*        Log.i("-------","message Quit");
         Object[] objArr = new Object[GAME_START];
         objArr[0] = Integer.valueOf(this.gameId);
         objArr[JOIN_ACK] = Integer.valueOf(this.playerNumber);
@@ -88,10 +94,11 @@ public class message {
         } catch (IOException ioe) {
             Log.i("send error", ioe.getMessage());
             System.exit(GAME_START);
-        }
+        }*/
     }
 
     public void send(String msg) {
+       /* Log.i("-------","message Send");
         String s = "MOVE " + String.valueOf(this.gameId) + " " + String.valueOf(this.playerNumber) + " + " + msg;
         this.sendData = s.getBytes();
         this.sendPacket = new DatagramPacket(this.sendData, s.length(), this.serverAddress, this.port);
@@ -100,10 +107,12 @@ public class message {
         } catch (IOException ioe) {
             Log.i("send error", ioe.getMessage());
             System.exit(GAME_START);
-        }
+        }*/
     }
 
     public int whatIsMessage(String[] msg) {
+/*
+        Log.i("-------","message WhatIsMessage");
         int rval = INVALID_MSG;
         int id;
         int num;
@@ -149,9 +158,13 @@ public class message {
             }
             return rval;
         }
+*/
+        return 14561561;
     }
 
     public String receive() {
+/*
+        Log.i("-------","message REceive");
         try {
             this.clientSocket.receive(this.receivePacket);
         } catch (IOException ioe) {
@@ -179,9 +192,12 @@ public class message {
             return "NOT VALID";
         }
         return sentence;
+*/
+        return "df";
     }
 
     public int getPlayerNumber() {
+        Log.i("-------","message getPlayerNumber");
         return this.playerNumber;
     }
 }

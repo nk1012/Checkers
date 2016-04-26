@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
 import java.lang.reflect.Array;
+import java.util.Objects;
 
 public class board extends View implements OnTouchListener {
     boolean again = false;
@@ -28,7 +29,7 @@ public class board extends View implements OnTouchListener {
     Paint blackSquare;
     private Handler gameoverHandler;
     Button hide;
-    boolean isHidden = false;
+    boolean isHidden = false; // проверяет есть ли хотя бы 1 ход для выбранной шашки
     boolean move = false;
     private String moveMessage = new String();
     private boolean multiplayerFlag;
@@ -139,13 +140,12 @@ public class board extends View implements OnTouchListener {
     public void onDraw(Canvas canvas) {
         int i;
         int j;
+        Log.i("----------------","OnDraw");
         canvas.drawBitmap(this.background, 0.0f, 0.0f, null);
         Paint p = new Paint();
         p.setAntiAlias(true);
         for (i = 0; i < this.squares.length; i++) {
             for (j = 0; j < this.squares[i].length; j++) {
-/*                Log.i("--------------",Integer.toString(i));
-                Log.i("--------------",Integer.toString(j));*/
                 if (this.myGame.board[i + 1][j + 1].square == 'r') {
                     p.setColor(Color.BLACK);
                 } else if (this.myGame.board[i + 1][j + 1].square == 'b') {
@@ -194,11 +194,15 @@ public class board extends View implements OnTouchListener {
         if ((isGameMultiplayer() || iscpuPlaying()) && this.playerNum != this.turn) {
             return super.onTouchEvent(event);
         }
+        //считывает координаты нажатия на доске
         float x = event.getX();
         float y = event.getY();
+
         if (x >= ((float) this.sx1) && y >= ((float) this.sy1) && x <= ((float) this.sx2) && y <= ((float) this.sy2)) {
+            // определяется клетка которую нажали
             int col = ((int) ((x - ((float) this.sx1)) / ((float) this.xOff))) + 1;
             int row = ((int) ((y - ((float) this.sy1)) / ((float) this.yOff))) + 1;
+
             if (this.myGame.board[row][col].selected && !this.again) {
                 this.myGame.board[row][col].selected = false;
                 this.move = false;
@@ -222,7 +226,12 @@ public class board extends View implements OnTouchListener {
                     Bundle b;
                     Message msg;
                     if (this.myGame.gameover()) {
-                        s = String.format("Game Over Player %d Wins!", new Object[]{Integer.valueOf(this.turn)});
+                        // передает сообщение Handler - кто победил
+                        if (this.turn == 1) {
+                            s = "Game Over!!! Black Wins!";
+                        } else {
+                            s = "Game Over!!! White Wins!";
+                        }
                         b = new Bundle();
                         b.putString("1", s);
                         b.putString("CHECK", "GAME_OVER");
@@ -230,9 +239,9 @@ public class board extends View implements OnTouchListener {
                         msg.setData(b);
                         this.gameoverHandler.sendMessage(msg);
                         return true;
-                    }
-                    this.turn = (this.turn % 2) + 1;
-                    if (!this.myGame.findMoves(this.turn)) {
+                    }//передаем ход другому
+                    this.turn = (this.turn % 2) + 1;//проверяет есть ли у игрока которому только что предали право ходить хотя бы один ход
+                    if (!this.myGame.findMoves(this.turn)) {//если нет то выводится сообщение о победе/поражении
                         int tmp = this.turn;
                         this.turn = (this.turn % 2) + 1;
                         s = String.format("Player %d Can't Move, Player %d Wins!", new Object[]{Integer.valueOf(tmp), Integer.valueOf(this.turn)});
@@ -260,6 +269,7 @@ public class board extends View implements OnTouchListener {
             }
         }
         invalidate();
+        Log.i("------------", "OnTouch Start");
         return true;
     }
 

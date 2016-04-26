@@ -1,8 +1,9 @@
 package odk.checkers;
 
-/**
+/*
  * Created by 1 on 18.04.2016.
- */
+*/
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,6 +11,7 @@ import android.util.Log;
 import java.util.Random;
 
 /* compiled from: single */
+
 class aiThread implements Runnable {
     private board myBoard;
     private checker myGame;
